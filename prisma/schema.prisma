@@ -1,0 +1,39 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Currencies {
+  id   Int    @id @default(autoincrement())
+  code String @db.VarChar(3)
+  name String @db.VarChar(100)
+
+  baseRates   Rates[] @relation("BaseCurrency")
+  targetRates Rates[] @relation("TargetCurrency")
+
+  @@map("currencies")
+}
+
+model Rates {
+  id               Int      @id @default(autoincrement())
+  baseCurrencyId   Int
+  targetCurrencyId Int
+  rate             Decimal  @db.Decimal(18, 6)
+  effectiveDate    DateTime @map("effective_date")
+
+  baseCurrency   Currencies @relation("BaseCurrency", fields: [baseCurrencyId], references: [id])
+  targetCurrency Currencies @relation("TargetCurrency", fields: [targetCurrencyId], references: [id])
+
+  @@map("rates")
+}

@@ -129,6 +129,12 @@ Run Unit Test (Jest)
 docker-compose exec web npm test
 ```
 
+Run Development Docker
+
+```
+docker-compose -f docker-compose.yml up --build
+```
+
 ## 📁 Project Structure
 
 ```

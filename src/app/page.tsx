@@ -27,6 +27,7 @@ export default function HomePage() {
   const [baseRateId] = useState<number>(1);
   const [skip, setSkip] = useState(0);
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
+  const [loading, setLoading] = useState(false);
 
   const setRates = (newCurrencies: currency[]) => {
     for (let i = 0; i < newCurrencies.length; i++) {
@@ -46,15 +47,35 @@ export default function HomePage() {
   };
 
   const fetchCurrencies = async () => {
+    if (loading) return;
+    setLoading(true);
+
     const res = await fetch(`/api/currencies?skip=${skip}&take=${take}&baseRateId=${baseRateId}`);
     const data = await res.json();
-    const currencies = setRates(data.currencies);
-    setCurrencies((prev) => [...prev, ...currencies]);
+    const ratecurrencies = setRates(data.currencies);
+
+    setCurrencies((prev) => {
+      const updated = [...prev, ...ratecurrencies];
+      if (updated.length >= data.total) {
+        setHasMore(false);
+      }
+      return updated;
+    });
+
     setSkip((prev) => prev + take);
-    if (currencies.length + data.currencies.length >= data.total) {
-      setHasMore(false);
-    }
+    setLoading(false);
   };
+
+  useEffect(() => {
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY > 0 && hasMore && !loading) {
+        fetchCurrencies();
+      }
+    };
+
+    window.addEventListener("wheel", handleWheel);
+    return () => window.removeEventListener("wheel", handleWheel);
+  }, [hasMore, loading]);
 
   useEffect(() => {
     if (date) {
@@ -94,15 +115,15 @@ export default function HomePage() {
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
         {currencies.map((cur, index) => (
           <div key={index} className="border p-6 rounded-lg bg-gray-50 shadow text-center">
-            <div className="text-xl font-semibold text-gray-700">{cur.code + " - " + cur.name}</div>
-            <div className="text-sm text-gray-700">{cur.rate?.toFixed(4)}</div>
+            <div className="text-sm font-semibold text-gray-700">{cur.code + " - " + cur.name}</div>
+            <div className="text-xl text-green-500">{cur.rate?.toFixed(4)}</div>
           </div>
         ))}
       </div>
 
       {/* Infinite Scroll Loader */}
       <div ref={loaderRef} className="mt-10 flex justify-center">
-        {hasMore && <span className="text-gray-500">Loading more...</span>}
+        {hasMore ? <span className="text-white">Loading more...</span> : <span className="text-white">--- End of list ---</span>}
       </div>
     </div>
   );

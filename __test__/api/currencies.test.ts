@@ -9,32 +9,25 @@ describe("Currency API", () => {
       },
       body: JSON.stringify({ code: "MYR", name: "Malaysia Ringgit" }),
     });
-
     const json = await res.json();
-
     expect(res.status).toBe(200);
     expect(json.code).toBe("MYR");
-
     createdId = json.id;
   });
 
   it("should get all currencies", async () => {
     const res = await fetch("http://localhost:3000/api/currencies");
     const json = await res.json();
-    console.log("Response JSON:", json); // 👈 Add this
-
     expect(res.status).toBe(200);
     expect(Array.isArray(json.currencies)).toBe(true);
   });
 
   it("should update the currency", async () => {
-    console.log("createdId:", createdId);
     const res = await fetch(`http://localhost:3000/api/currencies/${createdId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: "MYR", name: "Malaysian Ringgit" }),
     });
-
     const json = await res.json();
     expect(res.status).toBe(200);
     expect(json.name).toBe("Malaysian Ringgit");
@@ -44,7 +37,6 @@ describe("Currency API", () => {
     const res = await fetch(`http://localhost:3000/api/currencies/${createdId}`, {
       method: "DELETE",
     });
-
     expect(res.status).toBe(204); // No Content
   });
 

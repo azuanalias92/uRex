@@ -1,15 +1,16 @@
 /**
  * @swagger
- * /api/currencies/{id}:
+ * /api/rates/{id}:
  *   put:
- *     summary: Update a currency
+ *     summary: Update an exchange rate
+ *     description: Update the rate between two currencies by ID.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the currency to update
+ *         description: ID of the exchange rate to update
  *     requestBody:
  *       required: true
  *       content:
@@ -17,37 +18,47 @@
  *           schema:
  *             type: object
  *             properties:
- *               code:
- *                 type: string
- *                 example: "EUR"
- *               name:
- *                 type: string
- *                 example: "Euro"
+ *               currencyFromId:
+ *                 type: integer
+ *                 example: 1
+ *               currencyToId:
+ *                 type: integer
+ *                 example: 2
+ *               rate:
+ *                 type: number
+ *                 format: float
+ *                 example: 4.25
  *     responses:
  *       200:
- *         description: Updated currency
+ *         description: Successfully updated exchange rate
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ExchangeRate'
  *       404:
- *         description: Currency not found
+ *         description: Exchange rate not found
  */
 
 /**
  * @swagger
- * /api/currencies/{id}:
+ * /api/rates/{id}:
  *   delete:
- *     summary: Delete a currency
+ *     summary: Delete an exchange rate
+ *     description: Delete a specific exchange rate by ID.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID of the currency to delete
+ *         description: ID of the exchange rate to delete
  *     responses:
  *       204:
- *         description: Deleted successfully
+ *         description: Exchange rate deleted successfully (no content)
  *       404:
- *         description: Currency not found
+ *         description: Exchange rate not found
  */
+
 
 import { NextResponse } from "next/server";
 import { PrismaClient } from "../../../../../generated/prisma/client";
@@ -58,8 +69,7 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
   const { params } = context;
   const body = await req.json();
 
-
-  const updated = await prisma.currencies.update({
+  const updated = await prisma.rates.update({
     where: { id: Number(params.id) },
     data: body,
   });
@@ -69,12 +79,12 @@ export async function PUT(req: Request, context: { params: { id: string } }) {
 
 export async function DELETE(req: Request, { params }: { params: { id: string } }) {
   try {
-    await prisma.currencies.delete({
+    await prisma.rates.delete({
       where: { id: Number(params.id) },
     });
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: "Currency not found" }, { status: 404 });
+    return NextResponse.json({ error: "Rates not found" }, { status: 404 });
   }
 }

@@ -1,0 +1,16 @@
+/* src/styles/swagger.css */
+.swagger-ui {
+    background-color: #ffffff !important;
+    color: #000 !important;
+  }
+  
+  .swagger-ui .topbar {
+    background-color: #f9f9f9 !important;
+  }
+  
+  .swagger-ui .info h2,
+  .swagger-ui .info p,
+  .swagger-ui .opblock-summary-description {
+    color: #000 !important;
+  }
+  

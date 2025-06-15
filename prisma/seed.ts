@@ -6,11 +6,11 @@ const prisma = new PrismaClient();
 async function main() {
   await prisma.currencies.createMany({
     data: [
-      { id: 1, code: "USD", name: "US Dollar" },
-      { id: 2, code: "EUR", name: "Euro" },
-      { id: 3, code: "GBP", name: "British Pound" },
-      { id: 4, code: "JPY", name: "Japanese Yen" },
-      { id: 5, code: "AUD", name: "Australian Dollar" },
+      { code: "USD", name: "US Dollar" },
+      { code: "EUR", name: "Euro" },
+      { code: "GBP", name: "British Pound" },
+      { code: "JPY", name: "Japanese Yen" },
+      { code: "AUD", name: "Australian Dollar" },
     ],
     skipDuplicates: true,
   });

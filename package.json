@@ -10,7 +10,8 @@
     "lint": "next lint",
     "prisma": "prisma",
     "migrate:dev": "prisma migrate dev",
-    "generate": "prisma generate"
+    "generate": "prisma generate",
+    "test": "jest"
   },
   "dependencies": {
     "@prisma/client": "^6.9.0",

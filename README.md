@@ -92,6 +92,8 @@ npx prisma migrate dev
 
 ## 🔧 Docker Compose Commands
 
+Check docker logs
+
 ```
 docker-compose logs -f web
 ```
@@ -108,6 +110,25 @@ Stop & Remove All (Clean Slate)
 docker-compose down -v
 ```
 
+Run Migrations & Seed
+
+```
+docker-compose exec web npx prisma migrate dev
+docker-compose exec web npx prisma db seed
+```
+
+Reset Database
+
+```
+docker-compose exec web npx prisma migrate reset
+```
+
+Run Unit Test (Jest)
+
+```
+docker-compose exec web npm test
+```
+
 ## 📁 Project Structure
 
 ```
@@ -115,7 +136,9 @@ docker-compose down -v
 ├── prisma/
 │ ├── schema.prisma # Prisma schema definition
 │ └── seed.ts # Seed script
-├── pages/ # Next.js pages
+├── src/app/pages # Next.js pages
+├── src/app/api # Next.js API routes
+├── src/lib # Next.js lib
 ├── Dockerfile # Web service Dockerfile
 ├── docker-compose.yml # Service configuration
 ├── .env # Database URL

@@ -75,8 +75,18 @@ export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const take = parseInt(searchParams.get("take") || "12");
   const skip = parseInt(searchParams.get("skip") || "0");
-
+  const baseRateId = parseInt(searchParams.get("baseRateId") || "1");
   const currencies = await prisma.currencies.findMany({
+    include: {
+      targetRates: {
+        where: {
+          baseCurrencyId: baseRateId,
+        },
+        orderBy: {
+          effectiveDate: "desc",
+        },
+      },
+    },
     skip,
     take,
     orderBy: { id: "asc" },

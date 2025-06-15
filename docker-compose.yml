@@ -1,4 +1,5 @@
 version: "3.8"
+
 services:
   db:
     image: postgres:15
@@ -15,12 +16,17 @@ services:
   web:
     build:
       context: .
+      dockerfile: Dockerfile.dev
     depends_on:
       - db
+    volumes:
+      - .:/app
+      - /app/node_modules # prevent overwriting node_modules
     ports:
       - "3000:3000"
     environment:
       DATABASE_URL: "postgresql://postgres:postgres@db:5432/urex?schema=public"
+    command: sh -c "npx prisma migrate dev && npm run dev"
 
 volumes:
   pgdata:

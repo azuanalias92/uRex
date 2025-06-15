@@ -49,6 +49,7 @@ This will:
 
 - Build the Next.js app
 - Start PostgreSQL
+- Run Prisma Migrations
 
 ### 4. Seed the Database (One-Time Manual Step)
 

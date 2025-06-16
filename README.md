@@ -69,6 +69,14 @@ Visit:
 http://localhost:3000
 ```
 
+### 6. Access the API (Swagger)
+
+Visit:
+
+```
+http://localhost:3000/api/docs
+```
+
 ## 🛠 Prisma Commands (Optional)
 
 ### Generate Prisma Client
